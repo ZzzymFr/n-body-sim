@@ -2,7 +2,7 @@
   "name": "ui",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "devDependencies": {
     "electron": "^44.4.5"
   },
@@ -12,5 +12,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "dependencies": {
+    "three": "^0.186.1"
+  }
 }

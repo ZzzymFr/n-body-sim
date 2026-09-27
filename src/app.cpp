@@ -49,14 +49,15 @@ void universe<dimension>::tick(double dt) {
         // 内层必须用 it2 判断结束，否则 it2 会一直越过 end()。
         for (auto it2 = it + 1; it2 != objects_.end(); ++it2) {
             // it / it2 是迭代器，用 -> 访问，不能写 objects_[it]。
-            const vector<dimension> offset = it2->position_ - it->position_;
+            vector<dimension> offset = it2->position_ - it->position_;
             const double distance = offset.length();
+            offset /= distance;
             // 两点重合时方向无定义，再除以距离会得到无穷大。
             if (distance == 0.0) {
                 continue;
             }
             // |F| = G m1 m2 / r^2，方向是 offset/r，合起来是 G m1 m2 * offset / r^3。
-            const double scale = (G * it->mass() * it2->mass()) / (distance * distance * distance);
+            const double scale = (G * it->mass() * it2->mass()) / (distance * distance);
             const vector<dimension> force = offset * scale;
             it->net_force_ += force;
             it2->net_force_ -= force;
@@ -79,11 +80,11 @@ n_body_sim_app::n_body_sim_app()
 }
 
 void n_body_sim_app::init() {
-    object<3> first(100.0, 0);
-    object<3> second(1.0, 1.0);
+    object<3> first(1000.0, 0.5);
+    object<3> second(1000.0, 1.0);
     first.init(vector<3>(std::array<double, 3>{0.0, 0.0, 0.0}),
                vector<3>(std::array<double, 3>{0.0, 0.0, 0.0}));
-    second.init(vector<3>(std::array<double, 3>{1.0, 0.0, 0.0}),
+    second.init(vector<3>(std::array<double, 3>{-20.0, 0.0, 0.0}),
                 vector<3>(std::array<double, 3>{0.0, 0.0, 0.0}));
     universe.init({first, second});
 }
@@ -109,13 +110,34 @@ void n_body_sim_app::write_state(std::ostream& out) const {
         first_body = false;
         out << "{\"mass\":" << body.mass()
             << ",\"radius\":" << body.radius()
-            << ",\"position\":["
-            << body.position_.data[0] << ','
-            << body.position_.data[1] << ','
-            << body.position_.data[2] << "],\"velocity\":["
-            << body.velocity_.data[0] << ','
-            << body.velocity_.data[1] << ','
-            << body.velocity_.data[2] << "]}";
+            << ",\"position\":[";
+        bool first_component = true;
+        for (const double component : body.position_.data) {
+            if (!first_component) {
+                out << ',';
+            }
+            first_component = false;
+            out << component;
+        }
+        out << "],\"velocity\":[";
+        first_component = true;
+        for (const double component : body.velocity_.data) {
+            if (!first_component) {
+                out << ',';
+            }
+            first_component = false;
+            out << component;
+        }
+        out << "],\"acceleration\":[";
+        first_component = true;
+        for (const double component : body.acceleration_.data) {
+            if (!first_component) {
+                out<< ',';
+            }
+            first_component = false;
+            out << component;
+        }
+        out << "]}";
     }
     out << "]}\n";
 }
