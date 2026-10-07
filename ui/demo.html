@@ -1,40 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo </title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N 体模拟</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./node_modules/three/build/three.module.js",
+        "three/addons/": "./node_modules/three/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
-    <h1>Hello HTML</h1>
-    <h2>secondary title</h2>
-    <h3>third title</h3>
-    <h4>fourth title</h4>
-    <h5>fifth title</h5>
-    <h6>sixth title</h6>
-    <p>This is a paragraph</p>
-    <p><b>Bold</b>, <strong>strong</strong></p>
-    <p><i>斜体 </i>, <u>下划线</u><s>, 删除</s></p>
-    <ul>
-        <li>无序列表元素1</li>
-        <li>无序列表元素2</li>
-    </ul>
-    <ol>
-        <li>有序列表1</li> 
-        <li>有序列表2</li>
-    </ol>
-
-    <table border = "2">
-        <tr>
-            <th>col1</th>
-            <th>col2</th>
-            <th>col3</th>
-        </tr>
-        <tr>
-            <td>element11</td>
-            <td>element12</td>
-            <td>element13</td>
-        </tr>
-    </table>
+  <section class="viewport">
+    <canvas id="view"></canvas>
+  </section>
+  <section class="bottom">
+    <section class="panel panel-left"></section>
+    <section class="panel panel-right">
+      <div id="objects" class="object-list"></div>
+    </section>
+  </section>
+  <script type="module" src="view.js"></script>
 </body>
 </html>

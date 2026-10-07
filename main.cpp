@@ -1,18 +1,26 @@
-#include <iostream>
-
 #include "app.h"
-// TIP 要<b>Run</b>代码，请按 <shortcut actionId="Run"/> 或点击装订区域中的 <icon src="AllIcons.Actions.Execute"/> 图标。
+
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 int main() {
-    // TIP 当文本光标位于 <b>lang</b> 变量名称处时，按 <shortcut actionId="RenameElement"/> 可以查看 CLion 如何帮助您重命名该变量。
-
-    const auto lang = "C++";
-    std::cout << "Hello and welcome to " << lang << "!\n";
-    std::array<float ,3> data;
-    vector<3> test_vector(data);
-
-
-
-    return 0;
-    // TIP 请访问 <a href="https://www.jetbrains.com/help/clion/">jetbrains.com/help/clion/</a> 查看 CLion 帮助。此外，您还可以从主菜单中选择“帮助 | 学习 IDE 功能”，尝试 CLion 的交互式课次。
+    n_body_sim_app app{};
+    app.init();
+    // G 是国际单位制里的真实常数，单步 1 秒时位移极小。
+    // 每一帧推进 100 步，窗口里的坐标才会在几秒内看出变化。
+    constexpr int steps_per_frame = 100;
+    while (true) {
+        const auto frame_start = std::chrono::steady_clock::now();
+        for (int i = 0; i < steps_per_frame; ++i) {
+            app.tick();
+        }
+        app.write_state(std::cout);
+        std::cout.flush();
+        constexpr auto frame = std::chrono::milliseconds(33);
+        const auto elapsed = std::chrono::steady_clock::now() - frame_start;
+        if (elapsed < frame) {
+            std::this_thread::sleep_for(frame - elapsed);
+        }
+    }
 }
